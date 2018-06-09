@@ -1,0 +1,31 @@
+ul, li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+button {
+  border: none;
+  display: block;
+  background: goldenrod;
+  color: white;
+  width: 70%;
+  height: 70px;  
+  margin-left: 15%;
+	margin-right: 15%;
+  transform: scale(0.9);
+  transition: 300ms;
+}
+button:focus {
+  transform: scale(1);
+  outline: none;
+  background: powderblue;
+  color: #333;
+}
+
+.how-to-play {
+  width: 50%;
+  height: 50px;  
+  margin-left: 25%;
+  margin-right: 25%;
+  text-align: left;
+}

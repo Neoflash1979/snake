@@ -11,14 +11,20 @@
     "test:watch": "jest --watch",
     "watch": "webpack --watch"
   },
-
   "jest": {
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": ["ts", "tsx", "js"],
-    "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 90,
@@ -29,7 +35,6 @@
     },
     "collectCoverage": true
   },
-
   "author": "Philippe Vaillancourt",
   "license": "MIT",
   "devDependencies": {
@@ -46,11 +51,15 @@
     "ts-loader": "^4.3.0",
     "ts-node": "^6.0.5",
     "typescript": "^2.8.4",
+    "vue-loader": "^15.2.4",
+    "vue-template-compiler": "^2.5.16",
     "webpack": "^4.10.2",
     "webpack-cli": "^2.1.4",
     "webpack-dev-server": "^3.1.4"
   },
   "dependencies": {
-    "victor": "^1.1.0"
+    "victor": "^1.1.0",
+    "vue": "^2.5.16",
+    "vue-class-component": "^6.2.0"
   }
 }

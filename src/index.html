@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-  <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>Snake</title>
-    </head>
-    <body style="margin: 0px; display: flex; justify-content: center; align-items: center;">
-      <canvas id="snake" width="600" height="600" style="border: 1px solid black"></canvas>
-    </body>
-  </html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Snake</title>
+</head>
+
+<body style="margin: 0px; text-align: center; cursor: default">
+  <div id="app">    
+    <component v-on:menu-option="onMenuOption" v-bind:is="currentComponent"></component>    
+  </div>
+</body>
+
+</html>
