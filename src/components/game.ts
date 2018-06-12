@@ -9,35 +9,53 @@ import { waitForSeconds } from '../utils';
 
 export const Game = Vue.extend({
   template: `
-  <canvas ref="game" width="600px" height="600px" style="border: 1px solid black"></canvas>
+  <div style="margin-top: 10px">
+    <p class="game">Score: {{score}}</p>
+    <p class="game">Speed: {{speed}}%</p>
+    <canvas ref="game" width="600px" height="600px" style="border: 1px solid black"></canvas>
+  </div>  
   `,
-  data: function(): { keyboardInput: string | undefined } {
-    return {
-      keyboardInput: undefined
+  data: function(): {    
+    keyboardInput: {arrows:string | undefined; space: boolean};
+    loop: GameLoop | undefined;
+    score: number;
+    speed: string;
+  } {
+    return {      
+      keyboardInput: {arrows: undefined, space: false},
+      loop: undefined,
+      score: 0,
+      speed: '100'
     };
   },
   methods: {
     keyDownListener: function(event: KeyboardEvent) {
       this.onkey(event, event.key);
     },
+    keyUpListener: function(event: KeyboardEvent) {
+      if(event.key === ' ')
+      this.keyboardInput.space = false;
+    },
     onkey: function(event: KeyboardEvent, key: KeyboardEvent['key']) {
       switch (key) {
         case 'ArrowDown':
-          this.keyboardInput = 'DOWN';
+          this.keyboardInput.arrows = 'DOWN';
           event.preventDefault();
           break;
         case 'ArrowUp':
-          this.keyboardInput = 'UP';
+          this.keyboardInput.arrows = 'UP';
           event.preventDefault();
           break;
         case 'ArrowLeft':
-          this.keyboardInput = 'LEFT';
+          this.keyboardInput.arrows = 'LEFT';
           event.preventDefault();
           break;
         case 'ArrowRight':
-          this.keyboardInput = 'RIGHT';
+          this.keyboardInput.arrows = 'RIGHT';
           event.preventDefault();
           break;
+        case ' ':
+          this.keyboardInput.space = true;
       }
     }
   },
@@ -64,12 +82,18 @@ export const Game = Vue.extend({
     ) as CanvasRenderingContext2D;
 
     document.addEventListener('keydown', this.keyDownListener);
+    document.addEventListener('keyup', this.keyUpListener);
 
     const input = () => {
-      if (this.keyboardInput) {
+      if (this.keyboardInput.arrows) {
         board.snake.setVelocity(this
-          .keyboardInput as keyof typeof Snake.directions);
-        this.keyboardInput = undefined;
+          .keyboardInput.arrows as keyof typeof Snake.directions);
+        this.keyboardInput.arrows = undefined;
+      }
+      if (this.keyboardInput.space) {
+        board.slowDown();
+      } else {
+        board.speedUp();
       }
     };
 
@@ -78,6 +102,10 @@ export const Game = Vue.extend({
     const update = (step: number) => {
       previousSnake = board.snake.position;
       board.update();
+      this.score = board.score;
+      (<GameLoop>this.loop).slow = 12 - 6 * board.speed;
+      this.speed = (board.speed * 100).toFixed(0);
+
       currentSnake = board.snake.position;
     };
 
@@ -112,7 +140,7 @@ export const Game = Vue.extend({
         }
         gameOverAnimation.soundPlayed = true;
         if (gameOverAnimation.fontSize <= 60) {
-          gameOverAnimation.fontSize += 2;          
+          gameOverAnimation.fontSize += 2;
         } else {
           waitForSeconds(2).then(() => {
             this.$emit('menu-option', 3);
@@ -123,18 +151,19 @@ export const Game = Vue.extend({
       }
     };
 
-    const loop = new GameLoop({
+    this.loop = new GameLoop({
       updateTimeStep: 1000 / 60,
       fpsFilterStrength: 20,
-      slow: 6,
+      slow: 12 - 6 * board.speed,
       input,
       update,
       render
     });
 
-    loop.start();
+    this.loop.start();
   },
   destroyed: function() {
     document.removeEventListener('keydown', this.keyDownListener);
+    document.removeEventListener('keyup', this.keyDownListener);
   }
 });

@@ -6,7 +6,7 @@ let win: Electron.BrowserWindow | null;
 
 function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow({ width: 1366, height: 768  });
+  win = new BrowserWindow({ width: 1366, height: 768, titleBarStyle: 'hidden', autoHideMenuBar: true });
 
   // and load the index.html of the app.
   win.loadFile(`${__dirname}/index.html`);

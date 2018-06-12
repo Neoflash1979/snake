@@ -10,7 +10,12 @@ import { getRandomIntInclusive } from './utils';
 export class Board {
   private feed_!: Vector;
   private size_: number = 60;
+  private score_: number = 0;
+  private speed_: number = 1;
   private gameIsOver_: boolean = false;
+  private feedValue_ = 10;
+  private speedIncrement_ = 0.01;
+  private slowDownMode_ = false;
 
   /**
    * Creates an instance of Board.
@@ -31,11 +36,33 @@ export class Board {
     return this.gameIsOver_;
   }
 
+  get score() {
+    return this.score_;
+  }
+
   get size() {
     return this.size_;
   }
   get snake() {
     return this.snake_;
+  }
+
+  get speed() {
+    return this.speed_;
+  }
+
+  slowDown() {
+    if (!this.slowDownMode_) {
+      this.speed_ /= 2;
+      this.slowDownMode_ = true;
+    }
+  }
+
+  speedUp() {
+    if (this.slowDownMode_) {
+      this.speed_ *= 2;
+      this.slowDownMode_ = false;
+    }
   }
 
   /**
@@ -51,6 +78,13 @@ export class Board {
         return;
       }
       if (this.snakeIsOnFeed()) {
+        if (this.slowDownMode_) {
+          this.score_ += this.feedValue_ / 2;
+          this.speed_ += this.speedIncrement_ / 2;
+        } else {
+          this.score_ += this.feedValue_;
+          this.speed_ += this.speedIncrement_;
+        }
         this.snake_.grow();
         this.generateFeed();
       }

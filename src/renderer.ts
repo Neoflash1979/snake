@@ -3,7 +3,6 @@ import Vue from 'vue';
 import { TitleMenu } from './components/title-menu';
 import { Game } from './components/game';
 import { HowToPlay } from './components/how-to-play';
-import { Howl } from 'howler'
 import './style.css';
 import './audio/menu_game.wav';
 
@@ -39,6 +38,7 @@ var vm = new Vue({
           break;
         case 3:
           this.currentComponent = 'title-menu';
+          music.play();
       }
     }
   }

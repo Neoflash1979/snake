@@ -26,7 +26,7 @@ export const TitleMenu = Vue.extend({
       selected: 0
     };
   },
-  methods: {
+  methods: {    
     handleKeys: function(event: KeyboardEvent) {
       if (event.key === 'ArrowDown') {
         this.selected = Math.max(0, Math.min(this.selected + 1, 2));
