@@ -17,6 +17,17 @@ const commonConfig = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.wav$/,
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'audio/'
+          }
+        }],
+        
       }
     ]
   },

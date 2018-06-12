@@ -3,6 +3,9 @@ import Vector from 'victor';
 import { Board } from '../board';
 import { Snake } from '../snake';
 import { GameLoop } from '../game-loop';
+import '../audio/arcade_music_loop.wav';
+import '../audio/lose_sound.wav';
+import { waitForSeconds } from '../utils';
 
 export const Game = Vue.extend({
   template: `
@@ -39,6 +42,12 @@ export const Game = Vue.extend({
     }
   },
   mounted: function() {
+    const music = new Audio('./audio/arcade_music_loop.wav');
+    music.loop = true;
+    music.play();
+
+    const gameOverSound = new Audio('./audio/lose_sound.wav');
+
     const board = new Board(
       new Snake(new Vector(0, -1), [
         new Vector(29, 29),
@@ -73,7 +82,8 @@ export const Game = Vue.extend({
     };
 
     const gameOverAnimation = {
-      fontSize: 0
+      fontSize: 0,
+      soundPlayed: false
     };
     const render = (interp: number) => {
       ctx.clearRect(0, 0, 600, 600);
@@ -94,8 +104,20 @@ export const Game = Vue.extend({
         );
       }
       if (board.gameIsOver) {
-        gameOverAnimation.fontSize +=
-          gameOverAnimation.fontSize <= 60 ? 2 : 0;
+        if (!gameOverAnimation.soundPlayed) {
+          music.pause();
+          music.currentTime = 0;
+          gameOverSound.play();
+          gameOverAnimation.soundPlayed = true;
+        }
+        gameOverAnimation.soundPlayed = true;
+        if (gameOverAnimation.fontSize <= 60) {
+          gameOverAnimation.fontSize += 2;          
+        } else {
+          waitForSeconds(2).then(() => {
+            this.$emit('menu-option', 3);
+          });
+        }
         ctx.font = `${gameOverAnimation.fontSize}px serif`;
         ctx.fillText('GAME OVER', 300, 300);
       }
