@@ -117,4 +117,3 @@ export class Snake {
   }
 }
 
-const foo = new Snake();

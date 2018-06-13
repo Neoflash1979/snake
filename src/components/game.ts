@@ -15,14 +15,14 @@ export const Game = Vue.extend({
     <canvas ref="game" width="600px" height="600px" style="border: 1px solid black"></canvas>
   </div>  
   `,
-  data: function(): {    
-    keyboardInput: {arrows:string | undefined; space: boolean};
+  data: function(): {
+    keyboardInput: { arrows: string | undefined; space: boolean };
     loop: GameLoop | undefined;
     score: number;
     speed: string;
   } {
-    return {      
-      keyboardInput: {arrows: undefined, space: false},
+    return {
+      keyboardInput: { arrows: undefined, space: false },
       loop: undefined,
       score: 0,
       speed: '100'
@@ -33,8 +33,7 @@ export const Game = Vue.extend({
       this.onkey(event, event.key);
     },
     keyUpListener: function(event: KeyboardEvent) {
-      if(event.key === ' ')
-      this.keyboardInput.space = false;
+      if (event.key === ' ') this.keyboardInput.space = false;
     },
     onkey: function(event: KeyboardEvent, key: KeyboardEvent['key']) {
       switch (key) {
@@ -86,8 +85,8 @@ export const Game = Vue.extend({
 
     const input = () => {
       if (this.keyboardInput.arrows) {
-        board.snake.setVelocity(this
-          .keyboardInput.arrows as keyof typeof Snake.directions);
+        board.snake.setVelocity(this.keyboardInput
+          .arrows as keyof typeof Snake.directions);
         this.keyboardInput.arrows = undefined;
       }
       if (this.keyboardInput.space) {
@@ -97,10 +96,10 @@ export const Game = Vue.extend({
       }
     };
 
-    let previousSnake: Vector[];
-    let currentSnake: Vector[];
+    let previousSnake: Vector[] = board.snake.position;
+    let currentSnake: Vector[] = board.snake.position;
     const update = (step: number) => {
-      previousSnake = board.snake.position;
+      previousSnake = [...board.snake.position];
       board.update();
       this.score = board.score;
       (<GameLoop>this.loop).slow = 12 - 6 * board.speed;
@@ -123,13 +122,23 @@ export const Game = Vue.extend({
 
       //snake
       for (let i = 0; i < currentSnake.length - 1; i++) {
-        ctx.fillText(
-          'O',
-          (currentSnake[i].x / 3) * 30 * interp +
-            (previousSnake[i].x / 3) * 30 * (1 - interp),
-          (currentSnake[i].y / 3) * 30 * interp +
-            (previousSnake[i].y / 3) * 30 * (1 - interp)
-        );
+        if (previousSnake[i]) {
+          ctx.fillText(
+            'O',
+            (currentSnake[i].x / 3) * 30 * interp +
+              (previousSnake[i].x / 3) * 30 * (1 - interp),
+            (currentSnake[i].y / 3) * 30 * interp +
+              (previousSnake[i].y / 3) * 30 * (1 - interp)
+          );
+        } else {
+          ctx.fillText(
+            'O',
+            (currentSnake[i].x / 3) * 30 * interp +
+              (previousSnake[i - 1].x / 3) * 30 * (1 - interp),
+            (currentSnake[i].y / 3) * 30 * interp +
+              (previousSnake[i - 1].y / 3) * 30 * (1 - interp)
+          );
+        }
       }
       if (board.gameIsOver) {
         if (!gameOverAnimation.soundPlayed) {
