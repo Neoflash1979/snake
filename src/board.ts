@@ -8,6 +8,7 @@ import { getRandomIntInclusive } from './utils';
  * @class Board
  */
 export class Board {
+  private stateStore_: Board[] = [];
   private feed_!: Vector;
   private size_: number = 60;
   private score_: number = 0;
@@ -72,6 +73,7 @@ export class Board {
    */
   update() {
     if (!this.gameIsOver_) {
+      this.saveGameState();
       this.snake_.move();
       if (this.snakeIsOutsideBoard() || this.snakeIsOnItself()) {
         this.gameIsOver_ = true;
@@ -91,6 +93,13 @@ export class Board {
     }
   }
 
+  saveGameState() {
+    if(this.stateStore_.length = 15) {
+      this.stateStore_.shift();
+    }
+    this.stateStore_.push(this);
+  }
+
   /**
    * Randomly generates a new position for the feed
    * inside the game play area without being to close to the edge.
@@ -105,7 +114,7 @@ export class Board {
   }
 
   /**
-   * Checks it snake has collided with the feed
+   * Checks if snake has collided with the feed
    * @private
    * @returns {boolean}
    * @memberof Board

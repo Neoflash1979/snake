@@ -146,12 +146,11 @@ export const Game = Vue.extend({
           music.currentTime = 0;
           gameOverSound.play();
           gameOverAnimation.soundPlayed = true;
-        }
-        gameOverAnimation.soundPlayed = true;
+        }        
         if (gameOverAnimation.fontSize <= 60) {
           gameOverAnimation.fontSize += 2;
         } else {
-          waitForSeconds(2).then(() => {
+          waitForSeconds(3).then(() => {
             this.$emit('menu-option', 3);
           });
         }
